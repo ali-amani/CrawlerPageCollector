@@ -1,23 +1,64 @@
 package Models;
 
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
 import java.util.List;
 
 public class ShopPageContent {
-    private List<String> useConditions ; // h1 title
-    private String name ;
-    private String discount ;
-    private List<String> prices ;
-    private List<String> Gallery ;
-    private List<String> Description ;
-    private List<String> features ;
-    private List<String> shopInfo ;
-    private String mapCoordinate ;
+
+    @BsonProperty("useConditions")
+    private List<String> useConditions; // h1 title
+
+    @BsonProperty("name")
+    private String name;
+
+    @BsonProperty("discount")
+    private String discount;
+
+    @BsonProperty("prices")
+    private List<String> prices;
+
+    @BsonProperty("Gallery")
+    private List<String> Gallery;
+
+    @BsonProperty("Description")
+    private List<String> Description;
+
+    @BsonProperty("features")
+    private List<String> features;
+
+    @BsonProperty("shopInfo")
+    private List<String> shopInfo;
+
+    @BsonProperty("mapCoordinate")
+    private String mapCoordinate;
 
 
     public ShopPageContent() {
     }
 
-    public ShopPageContent(List<String> useConditions, String name, String discount, List<String> prices, List<String> Gallery, List<String> Description, List<String> features, List<String> shopInfo, String mapCoordinate) {
+    @BsonCreator
+    public ShopPageContent(
+            @BsonProperty("useConditions")
+                    List<String> useConditions, // h1 title
+            @BsonProperty("name")
+                    String name,
+            @BsonProperty("discount")
+                    String discount,
+            @BsonProperty("prices")
+                    List<String> prices,
+            @BsonProperty("Gallery")
+                    List<String> Gallery,
+            @BsonProperty("Description")
+                    List<String> Description,
+            @BsonProperty("features")
+                    List<String> features,
+            @BsonProperty("shopInfo")
+                    List<String> shopInfo,
+            @BsonProperty("mapCoordinate")
+                    String mapCoordinate
+    ) {
         this.useConditions = useConditions;
         this.name = name;
         this.discount = discount;
@@ -100,7 +141,6 @@ public class ShopPageContent {
     public void setMapCoordinate(String mapCoordinate) {
         this.mapCoordinate = mapCoordinate;
     }
-
 
 
 }

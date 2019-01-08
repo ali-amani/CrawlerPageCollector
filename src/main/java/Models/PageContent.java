@@ -1,11 +1,17 @@
 package Models;
 
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
 public class PageContent {
     //for the contents of the page to be rightly saved
-
+    @BsonProperty("link")
     private String link ;
+
+    @BsonProperty("title")
     private String title ;
 
+    @BsonProperty("shopPageContent")
     private ShopPageContent shopPageContent ;
 
 
@@ -15,7 +21,12 @@ public class PageContent {
 
     }
 
-    public PageContent(String link, String title, ShopPageContent shopPageContent) {
+    @BsonCreator
+    public PageContent(
+            @BsonProperty("link") String link,
+            @BsonProperty("title") String title,
+            @BsonProperty("shopPageContent") ShopPageContent shopPageContent
+    ) {
         this.link = link;
         this.title = title;
 

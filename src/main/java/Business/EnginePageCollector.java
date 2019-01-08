@@ -3,20 +3,22 @@ package Business;
 import Models.PageContent;
 import Models.Pivot;
 import Models.ShopPageContent;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.*;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class EnginePageCollector {
 
@@ -28,26 +30,40 @@ public class EnginePageCollector {
     public EnginePageCollector(List<Pivot> pivotList) {
         this.pivotList = pivotList;
         mapOfMarkets = new HashMap<String, List<PageContent>>();
-        this.mongoClient = new MongoClient("localhost", 27017);
+
+        CodecRegistry pojoCodecRegistry = fromRegistries(com.mongodb.MongoClient.getDefaultCodecRegistry(),
+                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .codecRegistry(pojoCodecRegistry).applyConnectionString(new ConnectionString("mongodb://localhost:27017")).build();
+
+        this.mongoClient = MongoClients.create(settings);
+
     }
 
     public void getAllShopPage() {
 
         try {
+            MongoDatabase database = mongoClient.getDatabase("Crawler");
+
+            MongoIterable<String> collectionNames = database.listCollectionNames();
+
             for (Pivot pivot : pivotList) {
                 Document doc = Jsoup.connect(pivot.getPivot()).get();
                 System.out.println("parent link : " + doc.title());
+                MongoCollection<PageContent> collection = database.getCollection(doc.title(), PageContent.class);
+                if (!collectionNames.into(new ArrayList<String>()).contains(doc.title()))
+                    database.createCollection(doc.title());
 
-                this.mapOfMarkets.put(doc.title(), getShopInfo(doc));
+                List<PageContent> pageContents = getShopInfo(doc);
+                collection.insertMany(pageContents);
+                this.mapOfMarkets.put(doc.title(), pageContents);
                 System.out.println("/////////////////////////////////");
             }
 
         } catch (Exception e) {
             Logger.getLogger(EnginePageCollector.class.getName()).log(Level.SEVERE, e.getMessage());
         }
-        MongoDatabase database = mongoClient.getDatabase("mydb");
-        System.out.println(database.getName());
-//        return list ;
+
     }
 
     private List<PageContent> getShopInfo(Document doc) throws Exception {
@@ -58,9 +74,10 @@ public class EnginePageCollector {
             String name = doc.select(".deal-title").get(count).text();
             String link = element.absUrl("href");
             System.out.println(count + " >> name of market : " + name + "link : " + link);
-
             links.add(new PageContent(link, name, getShopContent(link)));
             count++;
+            if (count == 10)
+                break;
         }
         return links;
     }
