@@ -1,33 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package walker.webcrawler;
-
 import java.util.ArrayList;
 import java.util.List;
-import walker.webcrawler.enginpart.EnginPageCollector;
-import walker.webcrawler.utils.Pivot;
 
-
-/**
- *
- * @author Ali Amani
- */
-public class WalkerWebCrawler {
-
-    /**
-     * @param args the command line arguments
-     */
+public class WebCrawler {
     public static void main(String[] args) {
         // TODO code application logic here
-        List<Pivot> pvs = new ArrayList<Pivot> ();
+        List<Pivot> pvs = new ArrayList<Pivot>();
         //pvs.add(new Pivot("https://github.com/yasserg/crawler4j"));
         pvs.add(new Pivot("https://takhfifan.com/cities/%D8%AA%D9%87%D8%B1%D8%A7%D9%86/"
                 + "%D8%B1%D8%B3%D8%AA%D9%88%D8%B1%D8%A7%D9%86-%D9%88-%DA%A9%D8%A7%D9%81%DB%8C-%D8%B4%D8%A7%D9%BE"));
         pvs.add(new Pivot("https://takhfifan.com/cities/%D8%AA%D9%87%D8%B1%D8%A7%D9%86/"
-                + "%D8%AA%D8%A6%D8%A7%D8%AA%D8%B1-%D9%88-%D9%87%D9%86%D8%B1"));        
+                + "%D8%AA%D8%A6%D8%A7%D8%AA%D8%B1-%D9%88-%D9%87%D9%86%D8%B1"));
         pvs.add(new Pivot("https://takhfifan.com/cities/%D8%AA%D9%87%D8%B1%D8%A7%D9%86/"
                 + "%D8%AA%D9%81%D8%B1%DB%8C%D8%AD%DB%8C-%D9%88-%D9%88%D8%B1%D8%B2%D8%B4%DB%8C"));
         pvs.add(new Pivot("https://takhfifan.com/cities/%D8%AA%D9%87%D8%B1%D8%A7%D9%86/"
@@ -38,12 +20,11 @@ public class WalkerWebCrawler {
                 + "%D8%B2%DB%8C%D8%A8%D8%A7%DB%8C%DB%8C-%D9%88-%D8%A2%D8%B1%D8%A7%DB%8C%D8%B4%DB%8C"));
         pvs.add(new Pivot("https://takhfifan.com/global/"
                 + "%D8%AA%D8%AE%D9%81%DB%8C%D9%81%D8%A7%D9%86%20%D9%87%D8%A7%DB%8C%20%D9%85%D8%B3%D8%A7%D9%81%D8%B1%D8%AA%DB%8C"));
-        EnginPageCollector collector = new EnginPageCollector(pvs);
+        EnginePageCollector collector = new EnginePageCollector(pvs);
         collector.getAllShopPage();
         //collector.searchSubPivots();
 //        collector.searchSubPivotsContent() ;
 
-        
+
     }
-    
 }
